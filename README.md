@@ -1,4 +1,4 @@
-# MedPomo — Study Tracker for Medical Students
+# Study Medicus — Study Tracker for Medical Students
 
 A focused, no-frills Pomodoro study tracker built **for medical students**.
 Plan focus blocks, log them against a med-school subject (preclinical,

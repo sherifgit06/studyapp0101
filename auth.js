@@ -1,4 +1,4 @@
-/* MedPomo — local-only auth shim.
+/* Study Medicus — local-only auth shim.
    Handles signup, login, session, and the app/landing page bridge.
    This is a placeholder for the future backend: same shape, different storage. */
 

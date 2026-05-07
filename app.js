@@ -1,4 +1,4 @@
-/* MedPomo — Pomodoro study tracker for medical students.
+/* Study Medicus — Pomodoro study tracker for medical students.
    Pure vanilla JS, persisted to localStorage. No build step. */
 
 (() => {
@@ -332,7 +332,7 @@
   function render() {
     const ms = timer.running ? Math.max(0, timer.endTime - Date.now()) : timer.remaining;
     $('#timeDisplay').textContent = formatMS(ms);
-    document.title = (timer.running ? formatMS(ms) + ' — ' : '') + 'MedPomo';
+    document.title = (timer.running ? formatMS(ms) + ' — ' : '') + 'Study Medicus';
 
     const ring = $('#ringProgress');
     const C = 565.48;
@@ -856,7 +856,7 @@
   // ---------- Notifications & sound ----------
   function notify(msg) {
     if (state.settings.notify && 'Notification' in window && Notification.permission === 'granted') {
-      try { new Notification('MedPomo', { body: msg }); } catch (_) {}
+      try { new Notification('Study Medicus', { body: msg }); } catch (_) {}
     }
   }
   let audioCtx;
@@ -1181,7 +1181,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'medpomo-export-' + new Date().toISOString().slice(0,10) + '.json';
+      a.download = 'studymedicus-export-' + new Date().toISOString().slice(0,10) + '.json';
       document.body.appendChild(a); a.click();
       setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 0);
     });
