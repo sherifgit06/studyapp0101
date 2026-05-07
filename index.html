@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedPomo — Study Tracker for Medical Students</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%95%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">⚕</span>
+      <div>
+        <h1>MedPomo</h1>
+        <p class="tagline">Pomodoro study tracker for medical students</p>
+      </div>
+    </div>
+    <div class="topstats">
+      <div class="stat">
+        <span class="stat-value" id="todayHours">0.0</span>
+        <span class="stat-label">hrs today</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" id="weekHours">0.0</span>
+        <span class="stat-label">hrs this week</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" id="streakDays">0</span>
+        <span class="stat-label">day streak</span>
+      </div>
+      <button id="settingsBtn" class="icon-btn" title="Settings" aria-label="Settings">⚙</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="timer-card" aria-label="Pomodoro timer">
+      <div class="mode-tabs" role="tablist">
+        <button class="mode-tab active" data-mode="focus" role="tab">Focus</button>
+        <button class="mode-tab" data-mode="short" role="tab">Short break</button>
+        <button class="mode-tab" data-mode="long" role="tab">Long break</button>
+      </div>
+
+      <div class="timer-ring" aria-live="polite">
+        <svg viewBox="0 0 200 200" class="ring-svg">
+          <circle cx="100" cy="100" r="90" class="ring-bg" />
+          <circle cx="100" cy="100" r="90" class="ring-fg" id="ringProgress" />
+        </svg>
+        <div class="timer-display">
+          <div class="time" id="timeDisplay">25:00</div>
+          <div class="mode-label" id="modeLabel">Focus</div>
+        </div>
+      </div>
+
+      <div class="session-controls">
+        <label class="field">
+          <span>Subject</span>
+          <select id="subjectSelect"></select>
+        </label>
+        <label class="field">
+          <span>Topic / chapter (optional)</span>
+          <input type="text" id="topicInput" placeholder="e.g. Cardiac cycle, Renal pharmacology" maxlength="80" />
+        </label>
+        <label class="field">
+          <span>Resource</span>
+          <select id="resourceSelect">
+            <option value="lectures">Lectures / notes</option>
+            <option value="textbook">Textbook</option>
+            <option value="qbank">Question bank (UWorld / Amboss)</option>
+            <option value="anki">Anki / flashcards</option>
+            <option value="video">Video (Boards & Beyond, Sketchy, Pathoma)</option>
+            <option value="clinical">Clinical / wards</option>
+            <option value="other">Other</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="controls">
+        <button id="startBtn" class="btn primary">Start</button>
+        <button id="pauseBtn" class="btn" disabled>Pause</button>
+        <button id="resetBtn" class="btn ghost">Reset</button>
+        <button id="skipBtn" class="btn ghost">Skip</button>
+      </div>
+
+      <div class="cycle-row">
+        <span>Cycle <strong id="cycleCount">1</strong> / <span id="cyclesUntilLong">4</span></span>
+        <span class="dots" id="cycleDots" aria-hidden="true"></span>
+      </div>
+    </section>
+
+    <aside class="side">
+      <section class="card">
+        <div class="card-head">
+          <h2>Today's sessions</h2>
+          <button id="clearTodayBtn" class="link-btn" title="Clear today">clear</button>
+        </div>
+        <ul id="todayList" class="session-list"><li class="empty">No sessions yet — start your first focus block.</li></ul>
+      </section>
+
+      <section class="card">
+        <h2>Weekly study (hours)</h2>
+        <div class="bars" id="weekBars" aria-label="weekly study chart"></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Subject breakdown (7 days)</h2>
+        </div>
+        <ul id="subjectBreakdown" class="breakdown"></ul>
+      </section>
+
+      <section class="card">
+        <h2>Daily goal</h2>
+        <div class="goal-wrap">
+          <div class="goal-bar"><div class="goal-fill" id="goalFill"></div></div>
+          <div class="goal-text"><span id="goalText">0.0 / 4.0 hrs</span></div>
+        </div>
+      </section>
+
+      <section class="card tip">
+        <h2>💡 Med-school tip</h2>
+        <p id="tipText"></p>
+        <button id="newTipBtn" class="link-btn">another tip</button>
+      </section>
+    </aside>
+  </main>
+
+  <!-- Settings modal -->
+  <div class="modal-backdrop" id="settingsModal" hidden>
+    <div class="modal" role="dialog" aria-labelledby="settingsTitle" aria-modal="true">
+      <div class="modal-head">
+        <h2 id="settingsTitle">Settings</h2>
+        <button class="icon-btn" id="closeSettings" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <h3>Timer durations (minutes)</h3>
+        <div class="grid3">
+          <label class="field"><span>Focus</span><input type="number" id="focusMin" min="1" max="180" /></label>
+          <label class="field"><span>Short break</span><input type="number" id="shortMin" min="1" max="60" /></label>
+          <label class="field"><span>Long break</span><input type="number" id="longMin" min="1" max="120" /></label>
+        </div>
+        <div class="grid2">
+          <label class="field"><span>Cycles before long break</span><input type="number" id="cyclesPerLong" min="2" max="10" /></label>
+          <label class="field"><span>Daily goal (hours)</span><input type="number" id="dailyGoal" min="0.5" max="16" step="0.5" /></label>
+        </div>
+
+        <h3>Behaviour</h3>
+        <label class="check"><input type="checkbox" id="autoStartBreaks" /> Auto-start breaks after focus</label>
+        <label class="check"><input type="checkbox" id="autoStartFocus" /> Auto-start next focus after break</label>
+        <label class="check"><input type="checkbox" id="soundOn" /> Sound notification at end of each block</label>
+        <label class="check"><input type="checkbox" id="notifyOn" /> Browser notification at end of each block</label>
+
+        <h3>Custom subject</h3>
+        <div class="row">
+          <input type="text" id="newSubjectInput" placeholder="Add subject (e.g. Neurology, Step 2 CK)" maxlength="40" />
+          <button id="addSubjectBtn" class="btn small">Add</button>
+        </div>
+        <ul id="customSubjectList" class="chip-list"></ul>
+
+        <h3>Data</h3>
+        <div class="row">
+          <button id="exportBtn" class="btn small">Export JSON</button>
+          <button id="importBtn" class="btn small">Import JSON</button>
+          <input type="file" id="importFile" accept="application/json" hidden />
+          <button id="resetAllBtn" class="btn small danger">Reset all data</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <audio id="dingAudio" preload="auto"></audio>
+  <script src="app.js"></script>
+</body>
+</html>
