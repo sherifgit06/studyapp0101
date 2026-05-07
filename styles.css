@@ -139,6 +139,23 @@ p  { margin: 0; }
 }
 .icon-btn:hover { background: var(--surface-2); }
 
+.user-pill {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  padding: 0.25rem 0.55rem 0.25rem 0.3rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+.user-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--long));
+  color: #fff; display: grid; place-items: center;
+  font-weight: 700; font-size: 0.85rem;
+}
+.user-name { font-weight: 600; max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 720px) { .user-name { display: none; } }
+
 /* ---------- Layout ---------- */
 .layout {
   display: grid;

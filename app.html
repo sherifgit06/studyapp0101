@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedPomo — Study Tracker for Medical Students</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%95%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+</head>
+<body data-theme="auto">
+
+  <!-- Exam countdown banner -->
+  <div class="exam-banner" id="examBanner" hidden></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">⚕</span>
+      <div>
+        <h1>MedPomo</h1>
+        <p class="tagline">Pomodoro study tracker for medical students</p>
+      </div>
+    </div>
+    <div class="topstats">
+      <div class="stat">
+        <span class="stat-value" id="todayHours">0.0</span>
+        <span class="stat-label">hrs today</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" id="weekHours">0.0</span>
+        <span class="stat-label">hrs this week</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value" id="streakDays">0</span>
+        <span class="stat-label">streak 🔥</span>
+      </div>
+      <button id="themeBtn" class="icon-btn" title="Toggle theme" aria-label="Toggle theme">🌗</button>
+      <button id="statsBtn" class="icon-btn" title="All-time stats" aria-label="Stats">📊</button>
+      <button id="conceptsBtn" class="icon-btn" title="Concepts vault" aria-label="Concepts">💡</button>
+      <button id="settingsBtn" class="icon-btn" title="Settings" aria-label="Settings">⚙</button>
+      <div class="user-pill" id="userPill" hidden>
+        <span class="user-avatar" id="userAvatar">M</span>
+        <span class="user-name" id="userName">Student</span>
+        <button id="logoutBtn" class="link-btn" title="Sign out">sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <section class="left-col">
+
+      <section class="timer-card" aria-label="Pomodoro timer">
+        <div class="mode-tabs" role="tablist">
+          <button class="mode-tab active" data-mode="focus" role="tab">Focus</button>
+          <button class="mode-tab" data-mode="short" role="tab">Short break</button>
+          <button class="mode-tab" data-mode="long" role="tab">Long break</button>
+        </div>
+
+        <div class="timer-ring" aria-live="polite">
+          <svg viewBox="0 0 200 200" class="ring-svg">
+            <circle cx="100" cy="100" r="90" class="ring-bg" />
+            <circle cx="100" cy="100" r="90" class="ring-fg" id="ringProgress" />
+          </svg>
+          <div class="timer-display">
+            <div class="time" id="timeDisplay">25:00</div>
+            <div class="mode-label" id="modeLabel">Focus</div>
+          </div>
+        </div>
+
+        <div class="session-controls">
+          <label class="field">
+            <span>Subject</span>
+            <select id="subjectSelect"></select>
+          </label>
+          <label class="field">
+            <span>Topic / chapter (optional)</span>
+            <input type="text" id="topicInput" placeholder="e.g. Cardiac cycle, Loop diuretics" maxlength="100" />
+          </label>
+          <label class="field">
+            <span>Resource</span>
+            <select id="resourceSelect">
+              <option value="lectures">Lectures / notes</option>
+              <option value="textbook">Textbook</option>
+              <option value="qbank">Question bank (UWorld / Amboss)</option>
+              <option value="anki">Anki / flashcards</option>
+              <option value="video">Video (B&amp;B, Sketchy, Pathoma)</option>
+              <option value="clinical">Clinical / wards</option>
+              <option value="other">Other</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="controls">
+          <button id="startBtn" class="btn primary">Start</button>
+          <button id="pauseBtn" class="btn" disabled>Pause</button>
+          <button id="resetBtn" class="btn ghost">Reset</button>
+          <button id="skipBtn" class="btn ghost">Skip</button>
+          <button id="captureBtn" class="btn ghost" title="Capture a concept or mnemonic">💡 Capture</button>
+        </div>
+
+        <div class="cycle-row">
+          <span>Cycle <strong id="cycleCount">1</strong> / <span id="cyclesUntilLong">4</span></span>
+          <span class="dots" id="cycleDots" aria-hidden="true"></span>
+        </div>
+      </section>
+
+      <section class="card plan-card">
+        <div class="card-head">
+          <h2>Today's plan</h2>
+          <button id="addPlanBtn" class="link-btn">+ add block</button>
+        </div>
+        <ul id="planList" class="plan-list"></ul>
+        <form id="addPlanForm" class="plan-form" hidden>
+          <select id="planSubject"></select>
+          <input id="planTopic" type="text" placeholder="Topic (optional)" maxlength="60" />
+          <input id="planMin" type="number" min="5" max="240" step="5" value="25" />
+          <button type="submit" class="btn small primary">Add</button>
+          <button type="button" id="cancelPlanBtn" class="btn small ghost">Cancel</button>
+        </form>
+      </section>
+
+      <section class="card review-card" id="spacedReviewCard" hidden>
+        <div class="card-head">
+          <h2>📚 Due for review</h2>
+        </div>
+        <ul id="reviewList" class="review-list"></ul>
+      </section>
+
+    </section>
+
+    <aside class="side">
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Today's sessions</h2>
+          <button id="clearTodayBtn" class="link-btn" title="Clear today">clear</button>
+        </div>
+        <ul id="todayList" class="session-list"><li class="empty">No sessions yet — start your first focus block.</li></ul>
+      </section>
+
+      <section class="card">
+        <h2>Daily goal</h2>
+        <div class="goal-wrap">
+          <div class="goal-bar"><div class="goal-fill" id="goalFill"></div></div>
+          <div class="goal-text"><span id="goalText">0.0 / 4.0 hrs</span></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Weekly study (hours)</h2>
+        <div class="bars" id="weekBars" aria-label="weekly study chart"></div>
+      </section>
+
+      <section class="card">
+        <h2>Subject breakdown (7 days)</h2>
+        <ul id="subjectBreakdown" class="breakdown"></ul>
+      </section>
+
+      <section class="card tip">
+        <h2>💡 Med-school tip</h2>
+        <p id="tipText"></p>
+        <button id="newTipBtn" class="link-btn">another tip</button>
+      </section>
+
+    </aside>
+
+    <!-- Full-width heatmap -->
+    <section class="card heatmap-card">
+      <div class="card-head">
+        <h2>Year activity</h2>
+        <span id="heatmapTotal" class="muted-small"></span>
+      </div>
+      <div class="heatmap-wrap">
+        <div class="heatmap-day-labels">
+          <span></span><span>Mon</span><span></span><span>Wed</span><span></span><span>Fri</span><span></span>
+        </div>
+        <div class="heatmap" id="heatmap"></div>
+      </div>
+      <div class="heatmap-legend">
+        <span>Less</span>
+        <span class="hm-cell" data-level="0"></span>
+        <span class="hm-cell" data-level="1"></span>
+        <span class="hm-cell" data-level="2"></span>
+        <span class="hm-cell" data-level="3"></span>
+        <span class="hm-cell" data-level="4"></span>
+        <span>More</span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Floating quick-capture button -->
+  <button id="fabCapture" class="fab" title="Quick capture concept (C)">💡</button>
+
+  <!-- Settings modal -->
+  <div class="modal-backdrop" id="settingsModal" hidden>
+    <div class="modal" role="dialog" aria-labelledby="settingsTitle" aria-modal="true">
+      <div class="modal-head">
+        <h2 id="settingsTitle">Settings</h2>
+        <button class="icon-btn" data-close="settingsModal" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <h3>Timer durations (minutes)</h3>
+        <div class="grid3">
+          <label class="field"><span>Focus</span><input type="number" id="focusMin" min="1" max="180" /></label>
+          <label class="field"><span>Short break</span><input type="number" id="shortMin" min="1" max="60" /></label>
+          <label class="field"><span>Long break</span><input type="number" id="longMin" min="1" max="120" /></label>
+        </div>
+        <div class="grid2">
+          <label class="field"><span>Cycles before long break</span><input type="number" id="cyclesPerLong" min="2" max="10" /></label>
+          <label class="field"><span>Daily goal (hours)</span><input type="number" id="dailyGoal" min="0.5" max="16" step="0.5" /></label>
+        </div>
+
+        <h3>Behaviour</h3>
+        <label class="check"><input type="checkbox" id="autoStartBreaks" /> Auto-start breaks after focus</label>
+        <label class="check"><input type="checkbox" id="autoStartFocus" /> Auto-start next focus after break</label>
+        <label class="check"><input type="checkbox" id="reflectPrompt" /> Prompt for a reflection after each focus block</label>
+        <label class="check"><input type="checkbox" id="soundOn" /> Sound notification at end of each block</label>
+        <label class="check"><input type="checkbox" id="notifyOn" /> Browser notification at end of each block</label>
+
+        <h3>Theme</h3>
+        <div class="row">
+          <label class="check"><input type="radio" name="theme" value="auto" /> Auto (OS)</label>
+          <label class="check"><input type="radio" name="theme" value="light" /> Light</label>
+          <label class="check"><input type="radio" name="theme" value="dark" /> Dark</label>
+        </div>
+
+        <h3>Exams</h3>
+        <ul id="examList" class="chip-list"></ul>
+        <form id="addExamForm" class="row">
+          <input type="text" id="examName" placeholder="Exam name (e.g. USMLE Step 1)" maxlength="40" required />
+          <input type="date" id="examDate" required />
+          <button type="submit" class="btn small primary">Add exam</button>
+        </form>
+
+        <h3>Custom subject</h3>
+        <div class="row">
+          <input type="text" id="newSubjectInput" placeholder="Add subject (e.g. Neurology, Step 2 CK)" maxlength="40" />
+          <button id="addSubjectBtn" class="btn small">Add</button>
+        </div>
+        <ul id="customSubjectList" class="chip-list"></ul>
+
+        <h3>Data</h3>
+        <div class="row">
+          <button id="exportBtn" class="btn small">Export JSON</button>
+          <button id="importBtn" class="btn small">Import JSON</button>
+          <input type="file" id="importFile" accept="application/json" hidden />
+          <button id="resetAllBtn" class="btn small danger">Reset all data</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats modal -->
+  <div class="modal-backdrop" id="statsModal" hidden>
+    <div class="modal modal-wide" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <h2>All-time stats</h2>
+        <button class="icon-btn" data-close="statsModal" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body" id="statsBody"></div>
+    </div>
+  </div>
+
+  <!-- Concepts vault modal -->
+  <div class="modal-backdrop" id="conceptsModal" hidden>
+    <div class="modal modal-wide" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <h2>Concepts &amp; mnemonics</h2>
+        <button class="icon-btn" data-close="conceptsModal" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="conceptForm" class="concept-form">
+          <select id="conceptSubject"></select>
+          <input id="conceptTitle" type="text" placeholder="Title (optional)" maxlength="80" />
+          <textarea id="conceptText" placeholder="Mnemonic, fact, or concept… (Markdown-ish allowed)" rows="3" required></textarea>
+          <button type="submit" class="btn primary">Save</button>
+        </form>
+        <div class="row">
+          <input id="conceptSearch" type="search" placeholder="Search concepts…" />
+          <select id="conceptFilterSubject">
+            <option value="">All subjects</option>
+          </select>
+        </div>
+        <ul id="conceptList" class="concept-list"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Session-end / reflection modal -->
+  <div class="modal-backdrop" id="reflectModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <h2>Block complete · log it</h2>
+        <button class="icon-btn" data-close="reflectModal" aria-label="Skip">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="reflect-summary" id="reflectSummary"></p>
+        <div id="reflectQbank" class="grid2" hidden>
+          <label class="field"><span>Questions answered</span><input type="number" id="reflectQNum" min="0" max="500" /></label>
+          <label class="field"><span>Correct</span><input type="number" id="reflectQCorrect" min="0" max="500" /></label>
+        </div>
+        <div id="reflectAnki" class="field" hidden>
+          <span>Cards reviewed</span><input type="number" id="reflectAnkiCards" min="0" max="2000" />
+        </div>
+        <label class="field">
+          <span>What did you learn? (3 sentences max)</span>
+          <textarea id="reflectNote" rows="3" placeholder="Top 1–3 things you want to remember"></textarea>
+        </label>
+        <div class="controls">
+          <button id="reflectSaveBtn" class="btn primary">Save</button>
+          <button id="reflectSkipBtn" class="btn ghost">Skip</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <audio id="dingAudio" preload="auto"></audio>
+  <script src="auth.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

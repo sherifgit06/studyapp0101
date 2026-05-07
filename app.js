@@ -995,6 +995,9 @@
 
   // ---------- Wire up ----------
   function init() {
+    // Session gate: bail out if auth.js redirected us
+    if (window.MedAuth && !window.MedAuth.getSession()) return;
+
     rebuildSubjectSelects();
     $('#subjectSelect').value = state.lastSubject || DEFAULT_SUBJECTS[0];
     $('#resourceSelect').value = state.lastResource || 'lectures';

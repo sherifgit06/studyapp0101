@@ -82,10 +82,30 @@ python3 -m http.server 8000
 …or simply double-click `index.html`. For a permanent home, deploy via
 **GitHub Pages** (Settings → Pages → deploy from branch).
 
+## Pages
+
+- `index.html` — marketing landing page with hero, features, FAQ, and the
+  signup/login modal. Pressing **Get started** or **Log in** drops you into
+  the app.
+- `app.html` — the actual study tracker. Gated by a local session — visiting
+  it without signing in bounces back to the landing page.
+
+## Local-only auth (placeholder)
+
+The "Sign up" and "Log in" forms are **local-only** for now: name, email
+and a SHA-256-hashed password are stored in `localStorage` so the app feels
+like a real product, and so a future backend can be plugged in without
+changing any of the UI. **Don't reuse a real password.** The public API in
+`auth.js` (`getSession`, `setSession`, `clearSession`) is the seam where the
+backend will swap in.
+
 ## Files
 
-- `index.html` — markup and DOM layout
-- `styles.css` — theme, responsive grid, components
+- `index.html` — landing page
+- `landing.css` — landing-page styles
+- `app.html` — the tracker (gated by session)
+- `styles.css` — app theme, layout, components
+- `auth.js` — local auth, session storage, page bridge
 - `app.js` — timer engine, persistence, stats, settings, concepts, plan,
   heatmap, achievements
 

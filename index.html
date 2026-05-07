@@ -3,317 +3,366 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MedPomo — Study Tracker for Medical Students</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>MedPomo — The study tracker built for medical students</title>
+  <meta name="description" content="Pomodoro timer + QBank &amp; Anki tracker + spaced repetition + year heatmap + exam countdowns. Built for medical students. Free, local-first, private." />
+  <link rel="stylesheet" href="landing.css" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%95%EF%B8%8F%3C/text%3E%3C/svg%3E" />
 </head>
-<body data-theme="auto">
+<body>
 
-  <!-- Exam countdown banner -->
-  <div class="exam-banner" id="examBanner" hidden></div>
-
-  <header class="topbar">
-    <div class="brand">
-      <span class="logo" aria-hidden="true">⚕</span>
-      <div>
-        <h1>MedPomo</h1>
-        <p class="tagline">Pomodoro study tracker for medical students</p>
-      </div>
+  <!-- Sticky nav -->
+  <nav class="nav">
+    <a href="#top" class="brand">
+      <span class="logo">⚕</span>
+      <span class="brand-name">MedPomo</span>
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#why">Why MedPomo</a>
+      <a href="#faq">FAQ</a>
     </div>
-    <div class="topstats">
-      <div class="stat">
-        <span class="stat-value" id="todayHours">0.0</span>
-        <span class="stat-label">hrs today</span>
+    <div class="nav-cta">
+      <button class="btn btn-ghost" data-auth="open" data-tab="login">Log in</button>
+      <button class="btn btn-primary" data-auth="open" data-tab="signup">Get started</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero" id="top">
+    <div class="hero-bg" aria-hidden="true">
+      <div class="blob blob-a"></div>
+      <div class="blob blob-b"></div>
+      <div class="blob blob-c"></div>
+    </div>
+
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <span class="eyebrow">Made for medical students · USMLE · COMLEX · MBBS</span>
+        <h1>The study tracker<br/>that gets med school.</h1>
+        <p class="lede">
+          Pomodoro that knows the difference between <strong>UWorld</strong> and
+          <strong>Anki</strong>. Tracks your <strong>QBank accuracy</strong>, your
+          <strong>cards reviewed</strong>, your <strong>streak</strong>, and the
+          <strong>countdown</strong> to Step&nbsp;1 — in one calm, focused screen.
+        </p>
+
+        <div id="welcomeBack" class="welcome-back" hidden>
+          Welcome back, <strong data-name></strong> — your sessions are waiting.
+        </div>
+
+        <div class="cta-row">
+          <button class="btn btn-primary btn-lg" data-auth="open" data-tab="signup">Get started — free</button>
+          <a href="#features" class="btn btn-ghost btn-lg">See features ↓</a>
+        </div>
+
+        <ul class="trust-list">
+          <li>✓ Free forever</li>
+          <li>✓ Local-first &amp; private</li>
+          <li>✓ No tracking</li>
+          <li>✓ Works offline</li>
+        </ul>
       </div>
-      <div class="stat">
-        <span class="stat-value" id="weekHours">0.0</span>
-        <span class="stat-label">hrs this week</span>
+
+      <!-- Stylized app preview (pure CSS) -->
+      <div class="hero-art" aria-hidden="true">
+        <div class="art-ring">
+          <svg viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="90" class="ring-bg" />
+            <circle cx="100" cy="100" r="90" class="ring-fg" />
+          </svg>
+          <div class="art-time">
+            <div class="t">22:14</div>
+            <div class="l">FOCUS · Pharmacology</div>
+          </div>
+        </div>
+        <div class="art-card art-card-1">
+          <div class="ac-label">Today</div>
+          <div class="ac-value">4.2 h</div>
+          <div class="ac-bar"><span style="width:84%"></span></div>
+          <div class="ac-sub">Goal 5 h · 84%</div>
+        </div>
+        <div class="art-card art-card-2">
+          <div class="ac-label">Streak</div>
+          <div class="ac-value">23 🔥</div>
+          <div class="ac-sub">Best ever</div>
+        </div>
+        <div class="art-card art-card-3">
+          <div class="ac-label">UWorld</div>
+          <div class="ac-value">76%</div>
+          <div class="ac-sub">324 / 426 correct</div>
+        </div>
+        <div class="art-card art-card-4">
+          <div class="ac-label">Step 1</div>
+          <div class="ac-value">87 d</div>
+          <div class="ac-sub">June 12</div>
+        </div>
+        <div class="art-heatmap" aria-hidden="true"></div>
       </div>
-      <div class="stat">
-        <span class="stat-value" id="streakDays">0</span>
-        <span class="stat-label">streak 🔥</span>
-      </div>
-      <button id="themeBtn" class="icon-btn" title="Toggle theme" aria-label="Toggle theme">🌗</button>
-      <button id="statsBtn" class="icon-btn" title="All-time stats" aria-label="Stats">📊</button>
-      <button id="conceptsBtn" class="icon-btn" title="Concepts vault" aria-label="Concepts">💡</button>
-      <button id="settingsBtn" class="icon-btn" title="Settings" aria-label="Settings">⚙</button>
     </div>
   </header>
 
-  <main class="layout">
+  <!-- Logo strip / value bar -->
+  <section class="strip">
+    <div class="strip-inner">
+      <span class="strip-item">Pairs with <strong>UWorld</strong></span>
+      <span class="strip-item">Pairs with <strong>Amboss</strong></span>
+      <span class="strip-item"><strong>Anki</strong> tracking</span>
+      <span class="strip-item"><strong>Sketchy</strong> · <strong>Pathoma</strong> · <strong>B&amp;B</strong></span>
+      <span class="strip-item"><strong>Step 1</strong>, <strong>Step 2 CK</strong>, shelves</span>
+    </div>
+  </section>
 
-    <section class="left-col">
+  <!-- Features -->
+  <section class="section" id="features">
+    <div class="section-head">
+      <span class="eyebrow">Built for the way you actually study</span>
+      <h2>Every feature, picked for med school.</h2>
+      <p class="section-sub">No bloat. No vague "productivity". Just the stuff that moves the needle on Step prep, shelves, and clinicals.</p>
+    </div>
 
-      <section class="timer-card" aria-label="Pomodoro timer">
-        <div class="mode-tabs" role="tablist">
-          <button class="mode-tab active" data-mode="focus" role="tab">Focus</button>
-          <button class="mode-tab" data-mode="short" role="tab">Short break</button>
-          <button class="mode-tab" data-mode="long" role="tab">Long break</button>
-        </div>
+    <div class="features-grid">
+      <article class="feature">
+        <div class="f-icon">⏱</div>
+        <h3>Pomodoro that respects you</h3>
+        <p>25/5/20 by default — fully tweakable. Auto-start breaks, sound cues, and progress ring keep you in flow without nagging.</p>
+      </article>
+      <article class="feature">
+        <div class="f-icon">📚</div>
+        <h3>Med-school subjects, preloaded</h3>
+        <p>Anatomy → Cardio, Step 1 → Step 2 CK. 19 subjects out of the box, organized into Preclinical, Clinical, and Boards.</p>
+      </article>
+      <article class="feature">
+        <div class="f-icon">🎯</div>
+        <h3>QBank &amp; Anki tracking</h3>
+        <p>Log questions answered + correct after each block. Running accuracy. Card counters. UWorld percentage that actually means something.</p>
+      </article>
+      <article class="feature">
+        <div class="f-icon">🗓</div>
+        <h3>Exam countdowns</h3>
+        <p>Pin Step 1, Step 2, OBGYN shelf, OSCE — anything. The pill at the top counts the days. The closer it gets, the harder you focus.</p>
+      </article>
+      <article class="feature">
+        <div class="f-icon">🧭</div>
+        <h3>Today's plan</h3>
+        <p>Sketch your blocks in the morning — subject, topic, minutes. One click loads any block straight into the timer.</p>
+      </article>
+      <article class="feature">
+        <div class="f-icon">🔁</div>
+        <h3>Spaced-review nudges</h3>
+        <p>Subjects you've put real time into but haven't touched in 3+ days resurface as "due for review". Gentle, not annoying.</p>
+      </article>
+      <article class="feature">
+        <div class="f-icon">🌳</div>
+        <h3>Year activity heatmap</h3>
+        <p>GitHub-style 53×7 grid coloured by daily hours. The streak you can't break is the streak you can see.</p>
+      </article>
+      <article class="feature">
+        <div class="f-icon">💡</div>
+        <h3>Concepts &amp; mnemonic vault</h3>
+        <p>Hit <kbd>C</kbd> mid-block. Save a pearl, a drug pearl, a mnemonic — tagged by subject. Search and review later.</p>
+      </article>
+      <article class="feature">
+        <div class="f-icon">📈</div>
+        <h3>Reflection that sticks</h3>
+        <p>After each focus block, a 30-second prompt: "What did you learn?" Tiny habit, huge effect on retention.</p>
+      </article>
+      <article class="feature">
+        <div class="f-icon">🏆</div>
+        <h3>Achievements</h3>
+        <p>18 unlocks across hours, streaks, QBank accuracy, Anki cards, breadth, and time-of-day. Gamified, not goofy.</p>
+      </article>
+      <article class="feature">
+        <div class="f-icon">🔒</div>
+        <h3>Local-first &amp; private</h3>
+        <p>Your data stays in your browser. No analytics. No tracking pixels. Export to JSON anytime; reset wipes everything.</p>
+      </article>
+      <article class="feature">
+        <div class="f-icon">🌗</div>
+        <h3>Light, dark, your choice</h3>
+        <p>Auto follows your OS. Manual override one click away. Designed for late-library nights and post-call mornings alike.</p>
+      </article>
+    </div>
+  </section>
 
-        <div class="timer-ring" aria-live="polite">
-          <svg viewBox="0 0 200 200" class="ring-svg">
-            <circle cx="100" cy="100" r="90" class="ring-bg" />
-            <circle cx="100" cy="100" r="90" class="ring-fg" id="ringProgress" />
-          </svg>
-          <div class="timer-display">
-            <div class="time" id="timeDisplay">25:00</div>
-            <div class="mode-label" id="modeLabel">Focus</div>
-          </div>
-        </div>
+  <!-- How it works -->
+  <section class="section section-alt" id="how">
+    <div class="section-head">
+      <span class="eyebrow">In four steps</span>
+      <h2>Plan. Focus. Reflect. Repeat.</h2>
+      <p class="section-sub">A study cycle that's been baked down to its essentials and rebuilt for med school.</p>
+    </div>
 
-        <div class="session-controls">
-          <label class="field">
-            <span>Subject</span>
-            <select id="subjectSelect"></select>
-          </label>
-          <label class="field">
-            <span>Topic / chapter (optional)</span>
-            <input type="text" id="topicInput" placeholder="e.g. Cardiac cycle, Loop diuretics" maxlength="100" />
-          </label>
-          <label class="field">
-            <span>Resource</span>
-            <select id="resourceSelect">
-              <option value="lectures">Lectures / notes</option>
-              <option value="textbook">Textbook</option>
-              <option value="qbank">Question bank (UWorld / Amboss)</option>
-              <option value="anki">Anki / flashcards</option>
-              <option value="video">Video (B&amp;B, Sketchy, Pathoma)</option>
-              <option value="clinical">Clinical / wards</option>
-              <option value="other">Other</option>
-            </select>
-          </label>
-        </div>
+    <ol class="steps">
+      <li class="step">
+        <span class="step-num">01</span>
+        <h3>Plan the day</h3>
+        <p>Drop 4–8 blocks into Today's Plan: subject, topic, minutes. Your morning self pre-decides what your tired afternoon self will do.</p>
+      </li>
+      <li class="step">
+        <span class="step-num">02</span>
+        <h3>Focus in 25-minute blocks</h3>
+        <p>One subject, one topic, one tab. The ring keeps you honest; the dots track the round. Long break every 4 cycles.</p>
+      </li>
+      <li class="step">
+        <span class="step-num">03</span>
+        <h3>Log what counts</h3>
+        <p>Questions answered. Cards reviewed. The two sentences you most want to remember. 30 seconds — pays dividends in 3 days.</p>
+      </li>
+      <li class="step">
+        <span class="step-num">04</span>
+        <h3>Watch the year</h3>
+        <p>Heatmap, streak, achievements, exam countdown. Visible progress is fuel — and it makes the next block easier to start.</p>
+      </li>
+    </ol>
+  </section>
 
-        <div class="controls">
-          <button id="startBtn" class="btn primary">Start</button>
-          <button id="pauseBtn" class="btn" disabled>Pause</button>
-          <button id="resetBtn" class="btn ghost">Reset</button>
-          <button id="skipBtn" class="btn ghost">Skip</button>
-          <button id="captureBtn" class="btn ghost" title="Capture a concept or mnemonic">💡 Capture</button>
-        </div>
-
-        <div class="cycle-row">
-          <span>Cycle <strong id="cycleCount">1</strong> / <span id="cyclesUntilLong">4</span></span>
-          <span class="dots" id="cycleDots" aria-hidden="true"></span>
-        </div>
-      </section>
-
-      <section class="card plan-card">
-        <div class="card-head">
-          <h2>Today's plan</h2>
-          <button id="addPlanBtn" class="link-btn">+ add block</button>
-        </div>
-        <ul id="planList" class="plan-list"></ul>
-        <form id="addPlanForm" class="plan-form" hidden>
-          <select id="planSubject"></select>
-          <input id="planTopic" type="text" placeholder="Topic (optional)" maxlength="60" />
-          <input id="planMin" type="number" min="5" max="240" step="5" value="25" />
-          <button type="submit" class="btn small primary">Add</button>
-          <button type="button" id="cancelPlanBtn" class="btn small ghost">Cancel</button>
-        </form>
-      </section>
-
-      <section class="card review-card" id="spacedReviewCard" hidden>
-        <div class="card-head">
-          <h2>📚 Due for review</h2>
-        </div>
-        <ul id="reviewList" class="review-list"></ul>
-      </section>
-
-    </section>
-
-    <aside class="side">
-
-      <section class="card">
-        <div class="card-head">
-          <h2>Today's sessions</h2>
-          <button id="clearTodayBtn" class="link-btn" title="Clear today">clear</button>
-        </div>
-        <ul id="todayList" class="session-list"><li class="empty">No sessions yet — start your first focus block.</li></ul>
-      </section>
-
-      <section class="card">
-        <h2>Daily goal</h2>
-        <div class="goal-wrap">
-          <div class="goal-bar"><div class="goal-fill" id="goalFill"></div></div>
-          <div class="goal-text"><span id="goalText">0.0 / 4.0 hrs</span></div>
-        </div>
-      </section>
-
-      <section class="card">
-        <h2>Weekly study (hours)</h2>
-        <div class="bars" id="weekBars" aria-label="weekly study chart"></div>
-      </section>
-
-      <section class="card">
-        <h2>Subject breakdown (7 days)</h2>
-        <ul id="subjectBreakdown" class="breakdown"></ul>
-      </section>
-
-      <section class="card tip">
-        <h2>💡 Med-school tip</h2>
-        <p id="tipText"></p>
-        <button id="newTipBtn" class="link-btn">another tip</button>
-      </section>
-
-    </aside>
-
-    <!-- Full-width heatmap -->
-    <section class="card heatmap-card">
-      <div class="card-head">
-        <h2>Year activity</h2>
-        <span id="heatmapTotal" class="muted-small"></span>
+  <!-- Why MedPomo (vs generic pomo) -->
+  <section class="section" id="why">
+    <div class="section-head">
+      <span class="eyebrow">Built different</span>
+      <h2>Why this isn't just another pomodoro app.</h2>
+    </div>
+    <div class="vs-grid">
+      <div class="vs-col vs-them">
+        <h3>Generic pomo apps</h3>
+        <ul>
+          <li>Generic "tasks" and "projects"</li>
+          <li>No idea what UWorld is</li>
+          <li>Can't tag a session with a resource</li>
+          <li>No exam countdown, no Step 1 awareness</li>
+          <li>No spaced-review prompts</li>
+          <li>Cloud accounts, telemetry, nags to upgrade</li>
+        </ul>
       </div>
-      <div class="heatmap-wrap">
-        <div class="heatmap-day-labels">
-          <span></span><span>Mon</span><span></span><span>Wed</span><span></span><span>Fri</span><span></span>
-        </div>
-        <div class="heatmap" id="heatmap"></div>
-      </div>
-      <div class="heatmap-legend">
-        <span>Less</span>
-        <span class="hm-cell" data-level="0"></span>
-        <span class="hm-cell" data-level="1"></span>
-        <span class="hm-cell" data-level="2"></span>
-        <span class="hm-cell" data-level="3"></span>
-        <span class="hm-cell" data-level="4"></span>
-        <span>More</span>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- Floating quick-capture button -->
-  <button id="fabCapture" class="fab" title="Quick capture concept (C)">💡</button>
-
-  <!-- Settings modal -->
-  <div class="modal-backdrop" id="settingsModal" hidden>
-    <div class="modal" role="dialog" aria-labelledby="settingsTitle" aria-modal="true">
-      <div class="modal-head">
-        <h2 id="settingsTitle">Settings</h2>
-        <button class="icon-btn" data-close="settingsModal" aria-label="Close">✕</button>
-      </div>
-      <div class="modal-body">
-        <h3>Timer durations (minutes)</h3>
-        <div class="grid3">
-          <label class="field"><span>Focus</span><input type="number" id="focusMin" min="1" max="180" /></label>
-          <label class="field"><span>Short break</span><input type="number" id="shortMin" min="1" max="60" /></label>
-          <label class="field"><span>Long break</span><input type="number" id="longMin" min="1" max="120" /></label>
-        </div>
-        <div class="grid2">
-          <label class="field"><span>Cycles before long break</span><input type="number" id="cyclesPerLong" min="2" max="10" /></label>
-          <label class="field"><span>Daily goal (hours)</span><input type="number" id="dailyGoal" min="0.5" max="16" step="0.5" /></label>
-        </div>
-
-        <h3>Behaviour</h3>
-        <label class="check"><input type="checkbox" id="autoStartBreaks" /> Auto-start breaks after focus</label>
-        <label class="check"><input type="checkbox" id="autoStartFocus" /> Auto-start next focus after break</label>
-        <label class="check"><input type="checkbox" id="reflectPrompt" /> Prompt for a reflection after each focus block</label>
-        <label class="check"><input type="checkbox" id="soundOn" /> Sound notification at end of each block</label>
-        <label class="check"><input type="checkbox" id="notifyOn" /> Browser notification at end of each block</label>
-
-        <h3>Theme</h3>
-        <div class="row">
-          <label class="check"><input type="radio" name="theme" value="auto" /> Auto (OS)</label>
-          <label class="check"><input type="radio" name="theme" value="light" /> Light</label>
-          <label class="check"><input type="radio" name="theme" value="dark" /> Dark</label>
-        </div>
-
-        <h3>Exams</h3>
-        <ul id="examList" class="chip-list"></ul>
-        <form id="addExamForm" class="row">
-          <input type="text" id="examName" placeholder="Exam name (e.g. USMLE Step 1)" maxlength="40" required />
-          <input type="date" id="examDate" required />
-          <button type="submit" class="btn small primary">Add exam</button>
-        </form>
-
-        <h3>Custom subject</h3>
-        <div class="row">
-          <input type="text" id="newSubjectInput" placeholder="Add subject (e.g. Neurology, Step 2 CK)" maxlength="40" />
-          <button id="addSubjectBtn" class="btn small">Add</button>
-        </div>
-        <ul id="customSubjectList" class="chip-list"></ul>
-
-        <h3>Data</h3>
-        <div class="row">
-          <button id="exportBtn" class="btn small">Export JSON</button>
-          <button id="importBtn" class="btn small">Import JSON</button>
-          <input type="file" id="importFile" accept="application/json" hidden />
-          <button id="resetAllBtn" class="btn small danger">Reset all data</button>
-        </div>
+      <div class="vs-col vs-us">
+        <h3>MedPomo</h3>
+        <ul>
+          <li>Preloaded subjects: preclinical → boards</li>
+          <li>Resource-aware: lectures · QBank · Anki · video · clinical</li>
+          <li>QBank accuracy + Anki card counters built in</li>
+          <li>Exam countdowns for Step 1, Step 2, shelves</li>
+          <li>Spaced-review nudges across your real subjects</li>
+          <li>Local-first. Free forever. Yours, not ours.</li>
+        </ul>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Stats modal -->
-  <div class="modal-backdrop" id="statsModal" hidden>
-    <div class="modal modal-wide" role="dialog" aria-modal="true">
-      <div class="modal-head">
-        <h2>All-time stats</h2>
-        <button class="icon-btn" data-close="statsModal" aria-label="Close">✕</button>
-      </div>
-      <div class="modal-body" id="statsBody"></div>
-    </div>
-  </div>
-
-  <!-- Concepts vault modal -->
-  <div class="modal-backdrop" id="conceptsModal" hidden>
-    <div class="modal modal-wide" role="dialog" aria-modal="true">
-      <div class="modal-head">
-        <h2>Concepts &amp; mnemonics</h2>
-        <button class="icon-btn" data-close="conceptsModal" aria-label="Close">✕</button>
-      </div>
-      <div class="modal-body">
-        <form id="conceptForm" class="concept-form">
-          <select id="conceptSubject"></select>
-          <input id="conceptTitle" type="text" placeholder="Title (optional)" maxlength="80" />
-          <textarea id="conceptText" placeholder="Mnemonic, fact, or concept… (Markdown-ish allowed)" rows="3" required></textarea>
-          <button type="submit" class="btn primary">Save</button>
-        </form>
-        <div class="row">
-          <input id="conceptSearch" type="search" placeholder="Search concepts…" />
-          <select id="conceptFilterSubject">
-            <option value="">All subjects</option>
-          </select>
-        </div>
-        <ul id="conceptList" class="concept-list"></ul>
+  <!-- Big CTA -->
+  <section class="section section-cta">
+    <div class="cta-card">
+      <h2>Start your first focus block today.</h2>
+      <p>Free. Local. Takes ~10 seconds to sign up — and you'll have your first session logged before your coffee is cold.</p>
+      <div class="cta-row">
+        <button class="btn btn-primary btn-lg" data-auth="open" data-tab="signup">Get started — free</button>
+        <button class="btn btn-ghost btn-lg" data-auth="open" data-tab="login">I already have an account</button>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Session-end / reflection modal -->
-  <div class="modal-backdrop" id="reflectModal" hidden>
-    <div class="modal" role="dialog" aria-modal="true">
-      <div class="modal-head">
-        <h2>Block complete · log it</h2>
-        <button class="icon-btn" data-close="reflectModal" aria-label="Skip">✕</button>
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <div class="section-head">
+      <span class="eyebrow">Quick answers</span>
+      <h2>FAQ</h2>
+    </div>
+    <div class="faq-list">
+      <details>
+        <summary>Is it really free?</summary>
+        <p>Yes. No ads, no tiers, no upgrade nags. You sign up so the app remembers who you are; eventually a backend will sync across devices, but the core will stay free.</p>
+      </details>
+      <details>
+        <summary>Where does my data live?</summary>
+        <p>In your browser's <code>localStorage</code>. Nothing leaves your machine. You can export to JSON for backups and import on another browser.</p>
+      </details>
+      <details>
+        <summary>Does it work offline?</summary>
+        <p>Once the page is loaded, yes — the entire app runs on the client. No network needed.</p>
+      </details>
+      <details>
+        <summary>What about Step 2, OSCEs, MBBS exams?</summary>
+        <p>The exam countdown is generic — name and date. Add as many as you like. Subjects can be customized too.</p>
+      </details>
+      <details>
+        <summary>Can I track Anki time even if I review elsewhere?</summary>
+        <p>Yes — start a focus block, set the resource to "Anki", and at the end log how many cards you reviewed. Running totals appear in your stats.</p>
+      </details>
+      <details>
+        <summary>Is the login secure?</summary>
+        <p>Right now the auth is local-only — passwords are hashed with SHA-256 and stored in your browser. It exists so the app feels real and so a future backend can drop in cleanly. <strong>Don't reuse a password you care about.</strong></p>
+      </details>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="logo">⚕</span>
+        <span>MedPomo</span>
       </div>
-      <div class="modal-body">
-        <p class="reflect-summary" id="reflectSummary"></p>
-        <div id="reflectQbank" class="grid2" hidden>
-          <label class="field"><span>Questions answered</span><input type="number" id="reflectQNum" min="0" max="500" /></label>
-          <label class="field"><span>Correct</span><input type="number" id="reflectQCorrect" min="0" max="500" /></label>
-        </div>
-        <div id="reflectAnki" class="field" hidden>
-          <span>Cards reviewed</span><input type="number" id="reflectAnkiCards" min="0" max="2000" />
-        </div>
+      <div class="footer-links">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#faq">FAQ</a>
+        <a href="https://github.com/sherifgit06/studyapp0101" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <div class="footer-meta">
+        Free forever · Local-first · No telemetry
+      </div>
+    </div>
+  </footer>
+
+  <!-- Auth modal -->
+  <div class="auth-modal" id="authModal" hidden>
+    <div class="auth-card" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+      <button class="auth-close" data-close-auth aria-label="Close">✕</button>
+      <div class="auth-head">
+        <span class="logo">⚕</span>
+        <h2 id="authTitle">Welcome to MedPomo</h2>
+        <p>Local-only beta — your account stays in this browser.</p>
+      </div>
+
+      <div class="auth-tabs">
+        <button id="tabSignup" class="auth-tab active">Sign up</button>
+        <button id="tabLogin"  class="auth-tab">Log in</button>
+      </div>
+
+      <form id="signupForm" class="auth-form" novalidate>
         <label class="field">
-          <span>What did you learn? (3 sentences max)</span>
-          <textarea id="reflectNote" rows="3" placeholder="Top 1–3 things you want to remember"></textarea>
+          <span>Name</span>
+          <input id="signupName" type="text" autocomplete="name" placeholder="Sarah Patel" required maxlength="40" />
         </label>
-        <div class="controls">
-          <button id="reflectSaveBtn" class="btn primary">Save</button>
-          <button id="reflectSkipBtn" class="btn ghost">Skip</button>
-        </div>
-      </div>
+        <label class="field">
+          <span>Email</span>
+          <input id="signupEmail" type="email" autocomplete="email" placeholder="you@school.edu" required />
+        </label>
+        <label class="field">
+          <span>Password</span>
+          <input id="signupPassword" type="password" autocomplete="new-password" placeholder="6+ characters" required minlength="6" />
+        </label>
+        <p class="auth-error" id="signupError"></p>
+        <button type="submit" class="btn btn-primary btn-block">Create account &amp; start studying →</button>
+      </form>
+
+      <form id="loginForm" class="auth-form" novalidate hidden>
+        <label class="field">
+          <span>Email</span>
+          <input id="loginEmail" type="email" autocomplete="email" placeholder="you@school.edu" required />
+        </label>
+        <label class="field">
+          <span>Password</span>
+          <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Your password" required />
+        </label>
+        <p class="auth-error" id="loginError"></p>
+        <button type="submit" class="btn btn-primary btn-block">Log in</button>
+      </form>
+
+      <p class="auth-fine">By continuing, you agree that this is a local beta with no cloud sync (yet).</p>
     </div>
   </div>
 
-  <!-- Toast container -->
-  <div class="toasts" id="toasts" aria-live="polite"></div>
-
-  <audio id="dingAudio" preload="auto"></audio>
-  <script src="app.js"></script>
+  <script src="auth.js"></script>
 </body>
 </html>
