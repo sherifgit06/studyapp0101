@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedMentor — Peer tutoring for medical students</title>
+  <meta name="description" content="MedMentor connects senior medical students who tutor with juniors who want to learn. Browse tutors by subject, book a session, and learn from someone who just aced it." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+</head>
+<body>
+  <!-- ============ HEADER ============ -->
+  <header class="topbar">
+    <a class="brand" href="#/" data-link>
+      <span class="brand-mark" aria-hidden="true">✚</span>
+      <span class="brand-name">Med<strong>Mentor</strong></span>
+    </a>
+
+    <nav class="topnav" id="topnav">
+      <a href="#/tutors" data-link>Find a tutor</a>
+      <a href="#/become" data-link>Become a tutor</a>
+      <a href="#/how" data-link>How it works</a>
+    </nav>
+
+    <div class="topbar-actions">
+      <button class="btn btn-ghost" id="loginBtn" data-auth="open" data-tab="login">Log in</button>
+      <button class="btn btn-primary" id="signupBtn" data-auth="open" data-tab="signup">Join free</button>
+      <div class="user-pill" id="userPill" hidden>
+        <a href="#/dashboard" data-link class="user-pill-link">
+          <span class="avatar" id="userAvatar">M</span>
+          <span class="user-pill-meta">
+            <span class="user-name" id="userName">Student</span>
+            <span class="user-role" id="userRole">member</span>
+          </span>
+        </a>
+        <button class="btn btn-ghost btn-sm" id="logoutBtn">Log out</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ APP ROOT (views render here) ============ -->
+  <main id="app"></main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div>
+        <span class="brand-mark small" aria-hidden="true">✚</span>
+        <strong>MedMentor</strong>
+        <p class="muted">Peer tutoring, by med students, for med students.</p>
+      </div>
+      <nav>
+        <a href="#/tutors" data-link>Find a tutor</a>
+        <a href="#/become" data-link>Become a tutor</a>
+        <a href="#/how" data-link>How it works</a>
+      </nav>
+      <p class="muted tiny">Demo app — all data is stored locally in your browser. No real payments or medical advice.</p>
+    </div>
+  </footer>
+
+  <!-- ============ AUTH MODAL ============ -->
+  <div class="modal" id="authModal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+      <button class="modal-close" data-close-auth aria-label="Close">×</button>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabSignup">Sign up</button>
+        <button class="auth-tab" id="tabLogin">Log in</button>
+      </div>
+
+      <form class="auth-form" id="signupForm">
+        <h2 id="authTitle">Create your account</h2>
+        <label>I am a…
+          <div class="role-toggle" id="roleToggle">
+            <label class="role-opt selected">
+              <input type="radio" name="role" value="student" checked />
+              <span><strong>Student</strong><small>I want tutoring</small></span>
+            </label>
+            <label class="role-opt">
+              <input type="radio" name="role" value="tutor" />
+              <span><strong>Tutor</strong><small>I want to teach</small></span>
+            </label>
+          </div>
+        </label>
+        <label>Full name
+          <input id="signupName" type="text" autocomplete="name" placeholder="Jordan Lee" />
+        </label>
+        <label>Email
+          <input id="signupEmail" type="email" autocomplete="email" placeholder="you@med.school" />
+        </label>
+        <label>Password
+          <input id="signupPassword" type="password" autocomplete="new-password" placeholder="At least 6 characters" />
+        </label>
+        <p class="form-error" id="signupError" role="alert"></p>
+        <button class="btn btn-primary btn-block" type="submit">Create account</button>
+        <p class="fine">Local demo — don't reuse a real password.</p>
+      </form>
+
+      <form class="auth-form" id="loginForm" hidden>
+        <h2>Welcome back</h2>
+        <label>Email
+          <input id="loginEmail" type="email" autocomplete="email" placeholder="you@med.school" />
+        </label>
+        <label>Password
+          <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Your password" />
+        </label>
+        <p class="form-error" id="loginError" role="alert"></p>
+        <button class="btn btn-primary btn-block" type="submit">Log in</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ TOAST ============ -->
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="auth.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
